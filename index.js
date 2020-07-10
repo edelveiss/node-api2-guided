@@ -1,104 +1,42 @@
-const express = require('express');
+//
+// if you're happy and you know it...
+//
+const server = require("./server.js");
 
-const Hubs = require('./hubs/hubs-model.js');
-
-const server = express();
-
-server.use(express.json());
-
-server.get('/', (req, res) => {
-  res.send(`
-    <h2>Lambda Hubs API</h>
-    <p>Welcome to the Lambda Hubs API</p>
-  `);
+//
+//
+// we moved the code that creates the express application, and put it in
+// server.js. In this file, we just "require" it, then start the application
+// listening.
+//
+// we moved all of our route handlers and other middleware to "router" files.
+//
+// this helps us to organize our code better, allowing for easier expansion and
+// troubleshooting, and collaborating with other developers.
+//
+//
+const PORT = 4000;
+server.listen(PORT, () => {
+  console.log(`\n*** Server Running on http://localhost:${PORT} ***\n`);
 });
 
-server.get('/api/hubs', (req, res) => {
-  Hubs.find(req.query)
-  .then(hubs => {
-    res.status(200).json(hubs);
-  })
-  .catch(error => {
-    // log error to database
-    console.log(error);
-    res.status(500).json({
-      message: 'Error retrieving the hubs',
-    });
-  });
-});
+//===================================================
+// const express = require("express");
 
-server.get('/api/hubs/:id', (req, res) => {
-  Hubs.findById(req.params.id)
-  .then(hub => {
-    if (hub) {
-      res.status(200).json(hub);
-    } else {
-      res.status(404).json({ message: 'Hub not found' });
-    }
-  })
-  .catch(error => {
-    // log error to database
-    console.log(error);
-    res.status(500).json({
-      message: 'Error retrieving the hub',
-    });
-  });
-});
+// //const Hubs = require('./hubs/hubs-model.js');
+// const hubsRouter = require("./hubs/hubs-router");
+// const welcomeRouter = require("./welcome/welcome-router");
 
-server.post('/api/hubs', (req, res) => {
-  Hubs.add(req.body)
-  .then(hub => {
-    res.status(201).json(hub);
-  })
-  .catch(error => {
-    // log error to database
-    console.log(error);
-    res.status(500).json({
-      message: 'Error adding the hub',
-    });
-  });
-});
+// const server = express();
 
-server.delete('/api/hubs/:id', (req, res) => {
-  Hubs.remove(req.params.id)
-  .then(count => {
-    if (count > 0) {
-      res.status(200).json({ message: 'The hub has been nuked' });
-    } else {
-      res.status(404).json({ message: 'The hub could not be found' });
-    }
-  })
-  .catch(error => {
-    // log error to database
-    console.log(error);
-    res.status(500).json({
-      message: 'Error removing the hub',
-    });
-  });
-});
+// server.use(express.json());
+// server.use("/api/hubs", hubsRouter);
+// server.use("/something/anything", hubsRouter);
+// server.use(welcomeRouter);
 
-server.put('/api/hubs/:id', (req, res) => {
-  const changes = req.body;
-  Hubs.update(req.params.id, changes)
-  .then(hub => {
-    if (hub) {
-      res.status(200).json(hub);
-    } else {
-      res.status(404).json({ message: 'The hub could not be found' });
-    }
-  })
-  .catch(error => {
-    // log error to database
-    console.log(error);
-    res.status(500).json({
-      message: 'Error updating the hub',
-    });
-  });
-});
+// // add an endpoint that returns all the messages for a hub
+// // add an endpoint for adding new message to a hub
 
-// add an endpoint that returns all the messages for a hub
-// add an endpoint for adding new message to a hub
-
-server.listen(4000, () => {
-  console.log('\n*** Server Running on http://localhost:4000 ***\n');
-});
+// server.listen(5000, () => {
+//   console.log("\n*** Server Running on http://localhost:5000 ***\n");
+// });
